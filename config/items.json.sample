@@ -1,0 +1,28 @@
+[
+  {
+    "name": "<unique name>",
+    "state": "",
+    "label": "<name that shows up in web GUI>",
+    "suffix": "<unit>",
+    "binding":
+    {
+      "name": "mqtt",
+      "settings": {
+        "topic": "<mqtt topic>"
+      }
+    }
+  },
+  {
+    "name": "<unique name>",
+    "state": "",
+    "label": "<name that shows up in web GUI>",
+    "suffix": "<unit>",
+    "binding":
+    {
+      "name": "<binding name>",
+      "settings": {
+        "<setting>": "<value>"
+      }
+    }
+  }
+]

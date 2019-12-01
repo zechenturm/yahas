@@ -1,0 +1,20 @@
+{{ define "text" }}
+
+<div class="display" id="item-{{.Name}}">
+    <div>
+            {{.Label}}:{{.Prefix}}{{.State}}{{.Suffix}}
+    </div>
+    <div class="updatetime">
+            {{ .LastUpdated }}
+    </div>
+    <script>
+        itemMap.set("{{ .Name }}", item => {
+            let d = document.getElementById("item-{{ .Name }}").getElementsByTagName("div");
+            d[0].innerText = item.label + ": " + item.prefix + item.state + item.suffix;
+            d[1].innerText = item.updated;
+
+        });
+    </script>
+</div>
+
+{{ end }}

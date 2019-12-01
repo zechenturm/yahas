@@ -1,0 +1,11 @@
+{
+  "logging": {
+    "bindings": {
+      "dummy": "off"
+    },
+    "plugins": {
+      "dummy": "debug"
+    },
+    "default": "info"
+  }
+}

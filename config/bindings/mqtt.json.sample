@@ -1,0 +1,4 @@
+{
+  "client-id": "yahas",
+  "server": "<hostname>:1883"
+}

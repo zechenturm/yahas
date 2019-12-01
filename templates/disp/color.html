@@ -1,0 +1,34 @@
+{{ define "color" }}
+
+<div  id="item-{{ .Name }}" class="display" style="display:flex;">
+    <div>
+        <div >
+            {{ .Label }}
+        </div>
+        <div class="updatetime">
+            {{ .LastUpdated }}
+        </div>
+    </div>
+    <input type="color" class="color" style="flex-grow: 1;"/>
+    <script>
+        document.getElementById("item-{{ .Name }}").getElementsByTagName("input")[0].addEventListener("change", evt => {
+                        let colorString = evt.target.value;
+                        let rgbComponents = {red: colorString.slice(1,3), green: colorString.slice(3,5), blue: colorString.slice(5,7)};
+                        let rgbValues = {red: parseInt("0x"+rgbComponents.red), green: parseInt("0x"+rgbComponents.green), blue: parseInt("0x"+rgbComponents.blue)};
+                        let rgbString = rgbValues.red + "," + rgbValues.green + "," + rgbValues.blue;
+                        console.log(colorString);
+                        console.log(rgbValues);
+                        console.log(rgbString);
+                        setItemState("{{ .Name }}", rgbString);
+                    }, false);
+        itemMap.set("{{.Name}}", item => {
+            let colors = item.state.split(",")
+            let hexcolors = colors.map(col => parseInt(col)).map(col => col.toString(16)).map(col => { if (col.length < 2) return "0"+col; else return col });
+            console.log(hexcolors);
+            document.getElementById("item-{{ .Name }}").getElementsByTagName("input")[0].value = "#" + hexcolors[0] + hexcolors[1] + hexcolors[2];
+            document.getElementById("item-{{ .Name }}").getElementsByTagName("div")[0].getElementsByTagName("div")[1].innerText = item.updated;
+        });
+    </script>
+</div>
+
+{{ end }}

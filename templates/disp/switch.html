@@ -1,0 +1,37 @@
+{{ define "switch" }}
+    <span id="item-{{ .Name }}" class="display" style="display:flex;">
+        <span style="flex-grow: 1;">
+            <div>
+                {{ .Label }}
+            </div>
+            <div class="updatetime">
+                {{ .LastUpdated }}
+            </div>
+        </span>
+        <label class="switch">
+                <input type="checkbox" onclick="sw_onclick('{{ .Name }}')" {{ if (eq .State "ON") }} checked {{ end }}>
+                <span class="slider"></span>
+              </label>
+        <script>
+            function sw_onclick(name) {
+                let slider = document.getElementById("item-"+name).getElementsByTagName("label")[0].getElementsByTagName("input")[0];
+                if(slider.checked) {
+                    console.log("ON");
+                    setItemState(name, "ON");
+                } else {
+                    console.log("OFF");
+                    setItemState(name, "OFF");
+                }
+            }
+            itemMap.set("{{ .Name }}", item => {
+                let slider = document.getElementById("item-{{ .Name }}").getElementsByTagName("label")[0].getElementsByTagName("input")[0];
+                if (item.state == "ON") {
+                    slider.checked = true;
+                } else {
+                    slider.checked = false;
+                }
+                document.getElementById("item-{{ .Name }}").getElementsByTagName("span")[0].getElementsByTagName("div")[1].innerText = item.updated;
+            });
+        </script>
+    </span>
+{{ end }}
