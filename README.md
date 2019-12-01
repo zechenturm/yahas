@@ -2,6 +2,8 @@
 Yet Another Home Automation Server is a lightweight home automation server written in GO.
 Yahas makes use of plugins providing great modularity, allowing it to be easily extended.
 
+For more detailed info consult the [wiki](https://github.com/zechenturm/yahas/wiki)
+
 # OS Compatibility
 
 Yahas currently run on Linux and maxOS (untested). This is a limitation of the [GO plugin package](https://golang.org/pkg/plugin/).
