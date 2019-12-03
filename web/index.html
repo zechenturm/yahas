@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <title>YAHAS</title>
+</head>
+<body>
+    <nav class="titlebar">
+        <span>
+            <a href="#" onclick="openMenu()">
+                <svg width="30" height="30">
+                    <path d="M0,5 30,5" stroke="#fff" stroke-width="5"/>
+                    <path d="M0,14 30,14" stroke="#fff" stroke-width="5"/>
+                    <path d="M0,23 30,23" stroke="#fff" stroke-width="5"/>
+                </svg>
+            </a>
+            <h1>Garten</h1>
+        </span>
+    </nav>
+    <div class="sidemenu" id="sidemenu">
+        <a href="#" class="close" onclick="closeMenu()">&times;</a>
+        <a href="#">Garten</a>
+        <a href="#">Moritz</a>
+    </div>
+    <div class="main" id="main">
+        <div id="item-text-temperature4"></div>
+        <div id="item-text-humidity3"></div>
+        <!-- <div id="item-switch-testbutton"></div> -->
+        <div id="item-rgb-led_stripe_terasse"></div>
+    </div>
+</body>
+    
+    <!-- switch -->
+    <template>
+        <span>
+            <button href="#" class="onbutton">ON</button>
+            <button href="#" class="offbutton">OFF</button>
+        </span>
+    </template>
+    <!-- text -->
+    <template>
+        <span class="display">
+            <div style="display: inline;"><!--label--></div>
+            <div style="display: inline;"><!--state--></div>
+        </span>
+    </template>
+    <!-- rgb selector -->
+    <template>
+        <span>
+            <input type="color" class="color"/>
+        </span>
+    </template>
+</html>
