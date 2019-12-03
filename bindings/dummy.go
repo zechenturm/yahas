@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/zechenturm/yahas.git/logging"
+	"github.com/zechenturm/yahas/logging"
 	"os"
 	"strconv"
 	"time"

@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"github.com/zechenturm/yahas.git/logging"
+	"github.com/zechenturm/yahas/logging"
 	"os"
 
 	"github.com/yosssi/gmq/mqtt"
