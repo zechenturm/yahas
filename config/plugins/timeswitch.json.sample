@@ -1,0 +1,17 @@
+[
+  {
+    "time-item": "<item1 to set time and state>",
+    "controlled-item":
+    [
+      "<item1 to be set>"
+    ]
+  },
+  {
+    "time-item": "<item2 to set time and state>",
+    "controlled-item":
+    [
+      "<item1 to be set>",
+      "<item2 to be set>"
+    ]
+  }
+]
