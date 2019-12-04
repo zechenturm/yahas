@@ -11,8 +11,8 @@ import (
 )
 
 type timeItem struct {
-	TimeItem       string `json:"time-item"`
-	ControlledITem string `json:"controlled-item"`
+	TimeItem        string   `json:"time-item"`
+	ControlledItems []string `json:"controlled-item"`
 }
 
 type TimeSwitch struct {
@@ -52,7 +52,9 @@ func (tm *TimeSwitch) Init(provider yahasplugin.Provider, l *logging.Logger, con
 					}
 					if timeString == strs[0] {
 						l.DebugLn(timeItem.Name, "set to ", strs[1])
-						(*tm.itemMap)[itm.ControlledITem].Send(strs[1])
+						for _, name := range itm.ControlledItems {
+							(*tm.itemMap)[name].Send(strs[1])
+						}
 					}
 				}
 			case <-tm.stop:
