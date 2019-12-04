@@ -1,0 +1,40 @@
+{{ define "time" }}
+
+<div class="display" id="item-{{.Name}}">
+    {{ $parts := split .State ";" }}
+	<div>
+		<label>
+			<div style="display: inline;">
+                {{ .Label }}
+			</div>
+			<input type="time" value="{{ index $parts 0 }}" style="font-size: 1.2em;" id="item-{{.Name}}-time" onchange="setItemState('{{.Name}}', getTimeState{{.Name}}())">
+		</label>
+		<div style="display: inline;">
+			<input type="text" value="{{ index $parts 1 }}" id="item-{{.Name}}-state" style="font-size: 1.2em;">
+		</div>
+	</div>
+	<div class="updatetime" id="item-{{.Name}}-updated">
+        {{ .LastUpdated }}
+	</div>
+	<script>
+		itemMap.set("{{ .Name }}", item => {
+		    let t = document.getElementById("item-{{.Name}}-time");
+            let s = document.getElementById("item-{{.Name}}-state");
+            let u = document.getElementById("item-{{.Name}}-updated");
+
+            let strings = item.state.split(";");
+            t.value = strings[0];
+            s.value = strings[1];
+            u.innerText = item.updated;
+
+        });
+
+		function getTimeState{{.Name}}() {
+            let t = document.getElementById("item-{{.Name}}-time");
+            let s = document.getElementById("item-{{.Name}}-state");
+            return t.value + ";" + s.value;
+        }
+	</script>
+</div>
+
+{{ end }}
