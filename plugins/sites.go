@@ -51,6 +51,7 @@ func siteHandler(w http.ResponseWriter, r *http.Request) {
 	logger.DebugLn("received requerst for site:" + params["site"])
 	t, err := template.New("main.html").Funcs(template.FuncMap{
 		"getItem": func(name string) item.ItemData { return (*items)[name].Data() },
+		"split":   strings.Split,
 	}).ParseGlob("templates/disp/*.html")
 	t, err = t.ParseFiles("templates/sites/"+params["site"]+".html", "templates/main.html")
 	if err != nil {
@@ -80,6 +81,7 @@ func siteHTMLHandler(w http.ResponseWriter, r *http.Request) {
 	logger.DebugLn("received html requerst for site:" + params["site"])
 	t, err := template.New(params["site"] + ".html").Funcs(template.FuncMap{
 		"getItem": func(name string) item.ItemData { return (*items)[name].Data() },
+		"split":   strings.Split,
 	}).ParseGlob("templates/disp/*.html")
 	t, err = t.ParseFiles("templates/sites/" + strings.ToLower(params["site"]) + ".html")
 	if err != nil {
