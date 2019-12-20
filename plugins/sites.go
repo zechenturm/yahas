@@ -18,7 +18,7 @@ type SitePlugin struct {
 
 var Plugin SitePlugin
 var logger *logging.Logger
-var items *map[string]*item.Item
+var items *item.Namespace
 
 type ItemsStuct struct {
 	Items    []item.ItemData

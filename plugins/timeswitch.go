@@ -17,7 +17,7 @@ type timeItem struct {
 
 type TimeSwitch struct {
 	items   []timeItem
-	itemMap *map[string]*item.Item
+	itemMap *item.Namespace
 	stop    chan struct{}
 	timer   chan struct{}
 }
@@ -44,7 +44,12 @@ func (tm *TimeSwitch) Init(provider yahasplugin.Provider, l *logging.Logger, con
 				l.DebugLn("check", t)
 				timeString := t.Format("15:04")
 				for _, itm := range tm.items {
-					timeItem := (*tm.itemMap)[itm.TimeItem].Data()
+					ptr, err := tm.itemMap.Get(itm.TimeItem)
+					if err != nil {
+						l.ErrorLn(err)
+						return
+					}
+					timeItem := ptr.Data()
 					strs := strings.Split(timeItem.State, ";")
 					if len(strs) != 2 {
 						l.ErrorLn("Failed to parse time item:", timeItem.Name, ":", timeItem.State)

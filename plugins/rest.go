@@ -21,7 +21,7 @@ type RPlugin struct {
 
 var logger *logging.Logger
 
-var items *map[string]*item.Item
+var items *item.Namespace
 
 var Plugin RPlugin
 

@@ -14,7 +14,7 @@ type Plugin interface {
 }
 type Provider interface {
 	RequestRouter() (*mux.Router, error)
-	Items() (*map[string]*item.Item, error)
+	Items() (*item.Namespace, error)
 	RequestPlugins() (Manager, error)
 	BindingManager() (item.BindingManager, error)
 }

@@ -43,7 +43,7 @@ func NewLoader(logger *logging.Logger, bindingLogLevels *map[string]string) *Loa
 	}
 }
 
-func (l *Loader) LoadItems(itemData io.Reader) map[string]*Item {
+func (l *Loader) LoadItems(itemData io.Reader) Namespace {
 	var itemDataArray []ItemData
 	l.logger.DebugLn("reading items")
 	bytes, err := ioutil.ReadAll(itemData)
