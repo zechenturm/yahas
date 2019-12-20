@@ -99,6 +99,6 @@ func (bm *bManager) loadFromDisk(name string) (Binding, error) {
 		bm.logger.DebugLn("Opened config file for", name)
 	}
 	logLevel := logging.StrToLvl((*bm.logLevels)[name])
-	b.Init(logging.New(name, logLevel), configFile)
-	return b, nil
+	err = b.Init(logging.New(name, logLevel), configFile)
+	return b, err
 }
