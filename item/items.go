@@ -1,10 +1,7 @@
 package item
 
 import (
-	"encoding/json"
 	"github.com/zechenturm/yahas/logging"
-	"io"
-	"io/ioutil"
 	"math/rand"
 	"sync"
 	"time"
@@ -43,28 +40,10 @@ func NewLoader(logger *logging.Logger, bindingLogLevels *map[string]string) *Loa
 	}
 }
 
-func (l *Loader) LoadItems(itemData io.Reader) Namespace {
-	var itemDataArray []ItemData
-	l.logger.DebugLn("reading items")
-	bytes, err := ioutil.ReadAll(itemData)
-	if err != nil {
-		l.logger.ErrorLn("Could not open items file:", err)
-	}
-	if err := json.Unmarshal(bytes, &itemDataArray); err != nil {
-		l.logger.ErrorLn("could not parse items json:", err)
-	}
-	itemArray := make([]Item, len(itemDataArray))
-	for index, data := range itemDataArray {
-		itemArray[index].New(data, l.BindingManager)
-	}
-	l.logger.InfoLn("loaded items")
-	l.logger.DebugLn("loaded items:", itemArray)
-
-	itemMap := make(map[string]*Item)
-	for index := range itemArray {
-		itemMap[itemArray[index].Data().Name] = &itemArray[index]
-	}
-	return itemMap
+func (l *Loader) LoadItems(dirPath string) (NamespaceMap, error) {
+	nsMap := make(NamespaceMap)
+	err := nsMap.LoadAllNamespaces(dirPath, l.BindingManager, l.logger)
+	return nsMap, err
 }
 
 // TODO: return error

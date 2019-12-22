@@ -72,11 +72,11 @@ func (yp *yPlugin) RequestRouter() (*mux.Router, error) {
 	return yp.router, nil
 }
 
-func (yp *yPlugin) Items() (*item.Namespace, error) {
+func (yp *yPlugin) Items() (*item.NamespaceMap, error) {
 	if !checkPermission(yp.Name, "items", true) {
 		return nil, errors.New("Permission denied")
 	}
-	return (*item.Namespace)(&Items), nil
+	return &Items, nil
 }
 
 func (yp *yPlugin) RequestPlugins() (yahasplugin.Manager, error) {

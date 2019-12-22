@@ -7,7 +7,6 @@ import (
 	"github.com/zechenturm/yahas/logging"
 	"io/ioutil"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/mux"
 )
@@ -24,14 +23,11 @@ type logConfig struct {
 	Plugins  map[string]string `json:"plugins"`
 }
 
-var itemFileName = "config/items.json"
+var itemFileDir = "config/items"
 
 var coreLogger *logging.Logger
 
-var itemNames []string
-
-var ItemArray []item.Item
-var Items = make(map[string]*item.Item)
+var Items = make(item.NamespaceMap)
 
 var coreconf coreConfig
 
@@ -44,12 +40,11 @@ func main() {
 	logging.InitLogging(logging.StrToLvl(coreconf.Loglevels.Default))
 	coreLogger = logging.New("core", logging.StrToLvl(coreconf.Loglevels.Core))
 	loader = item.NewLoader(coreLogger, &coreconf.Loglevels.Bindings)
-	configFile, err := os.Open(itemFileName)
+	var err error
+	Items, err = loader.LoadItems(itemFileDir)
 	if err != nil {
-		coreLogger.ErrorLn("error opening config file:", err)
-		return
+		coreLogger.ErrorLn("Error loading items:", err)
 	}
-	Items = loader.LoadItems(configFile)
 	mainRouter = mux.NewRouter()
 	mainRouter.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./web/"))))
 	loadPlugins()
