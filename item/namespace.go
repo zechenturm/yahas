@@ -37,6 +37,12 @@ func (ns *Namespace) Get(name string) (*Item, error){
 
 }
 
+func (ns *Namespace) ForEachItem(function func(name string, itm *Item)) {
+		for itmName, itm := range *ns {
+			function(itmName, itm)
+		}
+}
+
 func (nm *NamespaceMap) GetNamespace(name string) (*Namespace, error) {
 	ns, ok := (*nm)[name]
 	if !ok {
@@ -70,9 +76,12 @@ func (nm *NamespaceMap) loadNamespace(dirPath, name string, bm *bManager) error 
 		return err
 	}
 	itemArray := make([]Item, len(itemDataArray))
+	namespace := make(Namespace)
 	for index, data := range itemDataArray {
 		itemArray[index].New(data, bm)
+		namespace[data.Name] = &itemArray[index]
 	}
+	(*nm)[name] = &namespace
 	return nil
 }
 
@@ -101,6 +110,23 @@ func (nm *NamespaceMap) LoadAllNamespaces(dirPath string, bm *bManager, l *loggi
 	l.DebugLn("read namespace names:", names)
 	for _,name := range *names {
 		err = nm.loadNamespace(dirPath, name, bm)
+		if err != nil {
+			break
+		}
 	}
 	return err
+}
+
+func (nm *NamespaceMap) ForEachNamespace(function func(name string, ns *Namespace)) {
+	for name, ns := range *nm {
+			function(name, ns)
+	}
+}
+
+func (nm *NamespaceMap) ForEachItem(function func(ns, name string, itm *Item)) {
+	for nsName, ns := range *nm {
+		for itmName, itm := range *ns {
+			function(nsName, itmName, itm)
+		}
+	}
 }
