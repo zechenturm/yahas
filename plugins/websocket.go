@@ -47,7 +47,7 @@ func (wp *WSPlugin) Init(args yahasplugin.Provider, l *logging.Logger, configFil
 		return err
 	}
 
-	for _, itm := range *items {
+	items.ForEachItem(func(ns, name string, itm *item.Item) {
 		updateChan, handle := itm.Subscribe()
 		wp.handles[itm] = handle
 		go func(updateChan chan item.ItemData) {
@@ -56,7 +56,8 @@ func (wp *WSPlugin) Init(args yahasplugin.Provider, l *logging.Logger, configFil
 				updates <- update
 			}
 		}(updateChan)
-	}
+	})
+
 	go websocketManager(wp.done)
 
 	return nil

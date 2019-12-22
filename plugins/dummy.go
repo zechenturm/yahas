@@ -44,7 +44,13 @@ func (d *DummyPlugin) Init(args yahasplugin.Provider, l *logging.Logger, configF
 	}
 	d.stop = make(chan struct{})
 	go func() {
-		itemChan, id := (*(*items)["humidity3"]).Subscribe()
+		itm, err := items.GetItem("items", "humidity3")
+		if err != nil {
+			l.ErrorLn("Error getting item humidity3", err)
+			return
+		}
+		l.DebugLn(itm)
+		itemChan, id := itm.Subscribe()
 		logger.DebugLn("Subscribed to humidity3 with id", id)
 		for {
 			select {
@@ -52,7 +58,11 @@ func (d *DummyPlugin) Init(args yahasplugin.Provider, l *logging.Logger, configF
 				logger.InfoLn("dummmy received:", update)
 			case <-d.stop:
 				logger.DebugLn("Stopping receive routine")
-				(*(*items)["humidity3"]).Unsubscribe(id)
+				itm, err := items.GetItem("items", "humidity3")
+				if err != nil {
+					l.ErrorLn("Error getting item humidity3", err)
+				}
+				itm.Unsubscribe(id)
 				return
 			}
 		}

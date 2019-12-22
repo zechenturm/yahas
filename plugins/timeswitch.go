@@ -11,13 +11,18 @@ import (
 )
 
 type timeItem struct {
-	TimeItem        string   `json:"time-item"`
-	ControlledItems []string `json:"controlled-item"`
+	TimeItem        itemData   `json:"time-item"`
+	ControlledItems []itemData `json:"controlled-item"`
+}
+
+type itemData struct {
+	Namespace string `json:"namespace"`
+	Name string `json:"name"`
 }
 
 type TimeSwitch struct {
 	items   []timeItem
-	itemMap *item.Namespace
+	itemMap *item.NamespaceMap
 	stop    chan struct{}
 	timer   chan struct{}
 }
@@ -44,7 +49,7 @@ func (tm *TimeSwitch) Init(provider yahasplugin.Provider, l *logging.Logger, con
 				l.DebugLn("check", t)
 				timeString := t.Format("15:04")
 				for _, itm := range tm.items {
-					ptr, err := tm.itemMap.Get(itm.TimeItem)
+					ptr, err := tm.itemMap.GetItem(itm.TimeItem.Namespace, itm.TimeItem.Name)
 					if err != nil {
 						l.ErrorLn(err)
 						return
@@ -57,8 +62,13 @@ func (tm *TimeSwitch) Init(provider yahasplugin.Provider, l *logging.Logger, con
 					}
 					if timeString == strs[0] {
 						l.DebugLn(timeItem.Name, "set to ", strs[1])
-						for _, name := range itm.ControlledItems {
-							(*tm.itemMap)[name].Send(strs[1])
+						for _, it := range itm.ControlledItems {
+							i, err := tm.itemMap.GetItem(it.Namespace, it.Name)
+							if err != nil {
+								l.ErrorLn(it.Namespace, it.Name, err)
+								continue
+							}
+							i.Send(strs[1])
 						}
 					}
 				}

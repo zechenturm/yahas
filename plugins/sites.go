@@ -18,10 +18,9 @@ type SitePlugin struct {
 
 var Plugin SitePlugin
 var logger *logging.Logger
-var items *item.Namespace
+var items *item.NamespaceMap
 
 type ItemsStuct struct {
-	Items    []item.ItemData
 	Title    string
 	Sitemaps []string
 }
@@ -50,18 +49,12 @@ func siteHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	logger.DebugLn("received requerst for site:" + params["site"])
 	t, err := template.New("main.html").Funcs(template.FuncMap{
-		"getItem": func(name string) item.ItemData { return (*items)[name].Data() },
+		"getItem": func(namespace, name string) item.ItemData { itm, _ := items.GetItem(namespace, name); return itm.Data()},
 		"split":   strings.Split,
 	}).ParseGlob("templates/disp/*.html")
 	t, err = t.ParseFiles("templates/sites/"+params["site"]+".html", "templates/main.html")
 	if err != nil {
 		logger.ErrorLn(err)
-	}
-	itemDataArray := make([]item.ItemData, len(*items))
-	index := 0
-	for _, item := range *items {
-		itemDataArray[index] = item.Data()
-		index++
 	}
 	var sitemaps []string
 	err = filepath.Walk("templates/sites", func(path string, info os.FileInfo, err error) error {
@@ -70,7 +63,7 @@ func siteHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		return nil
 	})
-	err = t.Execute(w, ItemsStuct{Items: itemDataArray, Title: strings.Title(params["site"]), Sitemaps: sitemaps})
+	err = t.Execute(w, ItemsStuct{Title: strings.Title(params["site"]), Sitemaps: sitemaps})
 	if err != nil {
 		logger.ErrorLn(err)
 	}
@@ -80,20 +73,14 @@ func siteHTMLHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	logger.DebugLn("received html requerst for site:" + params["site"])
 	t, err := template.New(params["site"] + ".html").Funcs(template.FuncMap{
-		"getItem": func(name string) item.ItemData { return (*items)[name].Data() },
+		"getItem": func(namespace, name string) item.ItemData { itm, _ := items.GetItem(namespace, name); return itm.Data()},
 		"split":   strings.Split,
 	}).ParseGlob("templates/disp/*.html")
 	t, err = t.ParseFiles("templates/sites/" + strings.ToLower(params["site"]) + ".html")
 	if err != nil {
 		logger.ErrorLn(err)
 	}
-	itemDataArray := make([]item.ItemData, len(*items))
-	index := 0
-	for _, item := range *items {
-		itemDataArray[index] = item.Data()
-		index++
-	}
-	err = t.ExecuteTemplate(w, "sitemap", itemDataArray)
+	err = t.ExecuteTemplate(w, "sitemap", ItemsStuct{Title: strings.Title(params["site"]), Sitemaps:[]string{params["site"]}})
 	if err != nil {
 		logger.ErrorLn(err)
 	}

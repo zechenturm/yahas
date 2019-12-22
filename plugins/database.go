@@ -38,9 +38,9 @@ func (dbp *DBPlugin) Init(args yahasplugin.Provider, l *logging.Logger, configFi
 		return err
 	}
 	logger.DebugLn("subscribing to items")
-	for _, it := range *items {
-		updateChan, handle := it.Subscribe()
-		dbp.itemHandles[it] = handle
+	items.ForEachItem(func(ns, name string, itm *item.Item) {
+		updateChan, handle := itm.Subscribe()
+		dbp.itemHandles[itm] = handle
 		go func(updateChan chan item.ItemData) {
 
 			for {
@@ -54,7 +54,7 @@ func (dbp *DBPlugin) Init(args yahasplugin.Provider, l *logging.Logger, configFi
 				}
 			}
 		}(updateChan)
-	}
+	})
 	return nil
 }
 
