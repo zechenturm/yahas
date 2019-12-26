@@ -51,6 +51,7 @@ func main() {
 	Items, err = loader.LoadItems(itemFileDir)
 	if err != nil {
 		coreLogger.ErrorLn("Error loading items:", err)
+		return
 	}
 	mainRouter = mux.NewRouter()
 	mainRouter.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./web/"))))
