@@ -46,26 +46,25 @@ func (l *Loader) LoadItems(dirPath string) (NamespaceMap, error) {
 	return nsMap, err
 }
 
-// TODO: return error
-func (it *Item) New(id ItemData, manager *bManager) {
+func (it *Item) New(id ItemData, manager *bManager) error {
 
 	it.data = id
 	it.logger = manager.logger
 	it.subscribers = make(map[int64]chan ItemData)
 	if id.Binding.Name != "" {
-		//bind, err := getBinding(id.Binding.Name, logger, logging.StrToLvl((*loglevels)[id.Binding.Name]))
 		bind, err := manager.Load(id.Binding.Name)
 		if err != nil {
 			manager.logger.ErrorLn("Error loading Binding", id.Binding.Name, "for item", id.Name)
-			panic(err)
+			return err
 		}
 		it.binding.Send, it.binding.Receive, err = bind.RegisterItem(id.Name, id.Binding.Settings)
 		if err != nil {
 			manager.logger.ErrorLn("Error registering item", id.Name)
-			panic(err)
+			return err
 		}
 		go it.receive()
 	}
+	return nil
 }
 
 func (it *Item) Subscribe() (chan ItemData, int64) {

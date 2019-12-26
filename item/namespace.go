@@ -20,15 +20,15 @@ type AlreadyLoadedError struct {
 	name string
 }
 
-func (nfe NotFoundError) Error() string{
-	return "item " + nfe.itemName +  "not found"
+func (nfe NotFoundError) Error() string {
+	return "item " + nfe.itemName + "not found"
 }
 
 func (ale AlreadyLoadedError) Error() string {
 	return ale.name + " already loaded"
 }
 
-func (ns *Namespace) Get(name string) (*Item, error){
+func (ns *Namespace) Get(name string) (*Item, error) {
 	itm, ok := (*ns)[name]
 	if !ok {
 		return nil, NotFoundError{name}
@@ -38,9 +38,9 @@ func (ns *Namespace) Get(name string) (*Item, error){
 }
 
 func (ns *Namespace) ForEachItem(function func(name string, itm *Item)) {
-		for itmName, itm := range *ns {
-			function(itmName, itm)
-		}
+	for itmName, itm := range *ns {
+		function(itmName, itm)
+	}
 }
 
 func (nm *NamespaceMap) GetNamespace(name string) (*Namespace, error) {
@@ -78,7 +78,10 @@ func (nm *NamespaceMap) loadNamespace(dirPath, name string, bm *bManager) error 
 	itemArray := make([]Item, len(itemDataArray))
 	namespace := make(Namespace)
 	for index, data := range itemDataArray {
-		itemArray[index].New(data, bm)
+		err = itemArray[index].New(data, bm)
+		if err != nil {
+			return err
+		}
 		namespace[data.Name] = &itemArray[index]
 	}
 	(*nm)[name] = &namespace
@@ -86,7 +89,7 @@ func (nm *NamespaceMap) loadNamespace(dirPath, name string, bm *bManager) error 
 }
 
 func readNamespaces(dirPath string) (*[]string, error) {
-	files, err :=ioutil.ReadDir(dirPath)
+	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +111,7 @@ func (nm *NamespaceMap) LoadAllNamespaces(dirPath string, bm *bManager, l *loggi
 		return err
 	}
 	l.DebugLn("read namespace names:", names)
-	for _,name := range *names {
+	for _, name := range *names {
 		err = nm.loadNamespace(dirPath, name, bm)
 		if err != nil {
 			break
@@ -119,7 +122,7 @@ func (nm *NamespaceMap) LoadAllNamespaces(dirPath string, bm *bManager, l *loggi
 
 func (nm *NamespaceMap) ForEachNamespace(function func(name string, ns *Namespace)) {
 	for name, ns := range *nm {
-			function(name, ns)
+		function(name, ns)
 	}
 }
 
