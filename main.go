@@ -39,13 +39,21 @@ var loader *item.Loader
 func main() {
 	coreconf, err := loadConfig()
 	if err != nil {
-		logging.InitLogging(logging.DEFAULT)
+		err := logging.InitLogging(logging.DEFAULT)
+		if err != nil {
+			fmt.Println("Error initializin logging:", err)
+			return
+		}
 		coreLogger = logging.New("core", logging.DEFAULT)
 		coreLogger.ErrorLn("Error loading config:", err)
 		return
 	}
 
-	logging.InitLogging(logging.StrToLvl(coreconf.Loglevels.Default))
+	err = logging.InitLogging(logging.StrToLvl(coreconf.Loglevels.Default))
+	if err != nil {
+		fmt.Println("Error initializin logging:", err)
+		return
+	}
 	coreLogger = logging.New("core", logging.StrToLvl(coreconf.Loglevels.Core))
 	loader = item.NewLoader(coreLogger, &coreconf.Loglevels.Bindings)
 	Items, err = loader.LoadItems(itemFileDir)

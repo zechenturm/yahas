@@ -71,17 +71,18 @@ func New(name string, level int) *Logger {
 	return l
 }
 
-func InitLogging(level int) {
+func InitLogging(level int) error {
 	if level == DEFAULT {
 		level = INFO
 	}
 	defaultlevel = level
 	logfile, err := os.OpenFile("log.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	logger = io.MultiWriter(os.Stdout, logfile)
 	// defer logfile.Close()
+	return nil
 }
 
 func StrToLvl(name string) int {
