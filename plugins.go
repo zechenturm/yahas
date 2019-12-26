@@ -93,15 +93,28 @@ func (yp *yPlugin) BindingManager() (item.BindingManager, error) {
 	return loader.BindingManager, nil
 }
 
-func loadPlugins() {
+func loadPlugins(ignore []string) {
 	plugins = make(map[string]*yahasplugin.Plugin)
 	yPlugins = make(map[string]*yPlugin)
 	files, err := ioutil.ReadDir("./plugins")
 	if err != nil {
 		panic(err)
 	}
+
+	coreLogger.DebugLn("plugin ignore list:", ignore)
+
+	shouldIgnore := func(name string) bool {
+		for _, elem := range ignore {
+			if name == elem {
+				return true
+			}
+		}
+		return false
+	}
+
 	for _, file := range files {
-		if path.Ext(file.Name()) == ".so" {
+		baseName := file.Name()[:len(file.Name())-len(".so")]
+		if path.Ext(file.Name()) == ".so" && !shouldIgnore(baseName) {
 			err := loadPlugin(file.Name())
 			if err != nil {
 				coreLogger.ErrorLn("Error loading plugin", file.Name(), ":", err)

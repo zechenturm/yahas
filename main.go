@@ -12,8 +12,9 @@ import (
 )
 
 type coreConfig struct {
-	Loglevels   logConfig                  `json:"logging"`
-	Permissions map[string]map[string]bool `json:"plugin-permissions"`
+	Loglevels     logConfig                  `json:"logging"`
+	Permissions   map[string]map[string]bool `json:"plugin-permissions"`
+	IgnorePlugins []string                   `json:"ignore-plugins"`
 }
 
 type logConfig struct {
@@ -47,7 +48,7 @@ func main() {
 	}
 	mainRouter = mux.NewRouter()
 	mainRouter.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./web/"))))
-	loadPlugins()
+	loadPlugins(coreconf.IgnorePlugins)
 	http.ListenAndServe(":8000", mainRouter)
 }
 

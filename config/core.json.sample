@@ -7,5 +7,8 @@
       "dummy": "debug"
     },
     "default": "info"
-  }
+  },
+  "ignore-plugins": [
+    "dummy"
+  ]
 }
