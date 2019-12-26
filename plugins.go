@@ -93,12 +93,12 @@ func (yp *yPlugin) BindingManager() (item.BindingManager, error) {
 	return loader.BindingManager, nil
 }
 
-func loadPlugins(ignore []string) {
+func loadPlugins(ignore []string) error {
 	plugins = make(map[string]*yahasplugin.Plugin)
 	yPlugins = make(map[string]*yPlugin)
 	files, err := ioutil.ReadDir("./plugins")
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	coreLogger.DebugLn("plugin ignore list:", ignore)
@@ -123,6 +123,7 @@ func loadPlugins(ignore []string) {
 	}
 	coreLogger.DebugLn("plugins:", plugins)
 	coreLogger.DebugLn("yplugins:", yPlugins)
+	return nil
 }
 
 func loadPlugin(name string) error {
