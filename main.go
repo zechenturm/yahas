@@ -37,11 +37,17 @@ var mainRouter *mux.Router
 var loader *item.Loader
 
 func main() {
-	coreconf = loadConfig()
+	coreconf, err := loadConfig()
+	if err != nil {
+		logging.InitLogging(logging.DEFAULT)
+		coreLogger = logging.New("core", logging.DEFAULT)
+		coreLogger.ErrorLn("Error loading config:", err)
+		return
+	}
+
 	logging.InitLogging(logging.StrToLvl(coreconf.Loglevels.Default))
 	coreLogger = logging.New("core", logging.StrToLvl(coreconf.Loglevels.Core))
 	loader = item.NewLoader(coreLogger, &coreconf.Loglevels.Bindings)
-	var err error
 	Items, err = loader.LoadItems(itemFileDir)
 	if err != nil {
 		coreLogger.ErrorLn("Error loading items:", err)
@@ -52,16 +58,16 @@ func main() {
 	http.ListenAndServe(":8000", mainRouter)
 }
 
-func loadConfig() coreConfig {
+func loadConfig() (coreConfig, error) {
 	bytes, err := ioutil.ReadFile("config/core.json")
 	if err != nil {
-		panic(err)
+		return coreConfig{}, err
 	}
 	config := coreConfig{}
+	err = json.Unmarshal(bytes, &config)
 	if err != nil {
-		panic(err)
+		return coreConfig{}, err
 	}
-	json.Unmarshal(bytes, &config)
 	fmt.Println("config:", config)
-	return config
+	return config, nil
 }
