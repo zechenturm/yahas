@@ -49,8 +49,11 @@ func siteHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	logger.DebugLn("received requerst for site:" + params["site"])
 	t, err := template.New("main.html").Funcs(template.FuncMap{
-		"getItem": func(namespace, name string) item.ItemData { itm, _ := items.GetItem(namespace, name); return itm.Data()},
-		"split":   strings.Split,
+		"getItem": func(namespace, name string) item.ItemData {
+			itm, _ := items.GetItem(namespace, name)
+			return itm.Data()
+		},
+		"split": strings.Split,
 	}).ParseGlob("templates/disp/*.html")
 	t, err = t.ParseFiles("templates/sites/"+params["site"]+".html", "templates/main.html")
 	if err != nil {
@@ -73,14 +76,20 @@ func siteHTMLHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	logger.DebugLn("received html requerst for site:" + params["site"])
 	t, err := template.New(params["site"] + ".html").Funcs(template.FuncMap{
-		"getItem": func(namespace, name string) item.ItemData { itm, _ := items.GetItem(namespace, name); return itm.Data()},
-		"split":   strings.Split,
+		"getItem": func(namespace, name string) item.ItemData {
+			itm, err := items.GetItem(namespace, name)
+			if err != nil {
+				return item.ItemData{}
+			}
+			return itm.Data()
+		},
+		"split": strings.Split,
 	}).ParseGlob("templates/disp/*.html")
 	t, err = t.ParseFiles("templates/sites/" + strings.ToLower(params["site"]) + ".html")
 	if err != nil {
 		logger.ErrorLn(err)
 	}
-	err = t.ExecuteTemplate(w, "sitemap", ItemsStuct{Title: strings.Title(params["site"]), Sitemaps:[]string{params["site"]}})
+	err = t.ExecuteTemplate(w, "sitemap", ItemsStuct{Title: strings.Title(params["site"]), Sitemaps: []string{params["site"]}})
 	if err != nil {
 		logger.ErrorLn(err)
 	}
