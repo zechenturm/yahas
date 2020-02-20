@@ -119,9 +119,9 @@ function getItems() {
 }
 }
 
-function setItemState(name, state) {
+function setItemState(namespace, name, state) {
     const Http = new XMLHttpRequest();
-    const url="/rest/items/"+name+"/state";
+    const url="/rest/items/"+namespace+"/"+name+"/state";
     Http.open("POST", url);
     Http.send(state);
     Http.onreadystatechange=(e)=>{

@@ -9,18 +9,18 @@
             </div>
         </span>
         <label class="switch">
-                <input type="checkbox" onclick="sw_onclick('{{ .Name }}')" {{ if (eq .State "ON") }} checked {{ end }}>
+                <input type="checkbox" onclick="sw_onclick('{{ .Namespace}}', '{{ .Name }}')" {{ if (eq .State "ON") }} checked {{ end }}>
                 <span class="slider"></span>
               </label>
         <script>
-            function sw_onclick(name) {
+            function sw_onclick(namespace, name) {
                 let slider = document.getElementById("item-"+name).getElementsByTagName("label")[0].getElementsByTagName("input")[0];
                 if(slider.checked) {
                     console.log("ON");
-                    setItemState(name, "ON");
+                    setItemState(namespace, name, "ON");
                 } else {
                     console.log("OFF");
-                    setItemState(name, "OFF");
+                    setItemState(namespace, name, "OFF");
                 }
             }
             itemMap.set("{{ .Name }}", item => {

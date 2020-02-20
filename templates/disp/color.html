@@ -19,7 +19,7 @@
                         console.log(colorString);
                         console.log(rgbValues);
                         console.log(rgbString);
-                        setItemState("{{ .Name }}", rgbString);
+                        setItemState("{{ .Namespace }}", "{{ .Name }}", rgbString);
                     }, false);
         itemMap.set("{{.Name}}", item => {
             let colors = item.state.split(",")
