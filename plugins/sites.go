@@ -72,6 +72,7 @@ func siteHandler(w http.ResponseWriter, r *http.Request) {
 func getItem(namespace, name string) item.ItemData {
 	itm, err := items.GetItem(namespace, name)
 	if err != nil {
+		logger.ErrorLn("item not found: {", namespace, name, "}")
 		return item.ItemData{}
 	}
 	return itm.Data()
