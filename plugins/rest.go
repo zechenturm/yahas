@@ -20,7 +20,7 @@ type RPlugin struct {
 }
 
 type Namespace struct {
-	Name string `json:"name"`
+	Name  string          `json:"name"`
 	Items []item.ItemData `json:"items"`
 }
 
@@ -42,8 +42,8 @@ func (RPlugin) Init(args yahasplugin.Provider, l *logging.Logger, configFile *os
 	logger = l
 	router.HandleFunc("/items/{namespace}/{item}", getItemHandler).Methods("GET")
 	router.HandleFunc("/items/{namespace}/{item}/{property}", getItemPropertyHandler).Methods("GET")
-	router.HandleFunc("/items//{namespace}/{item}/state", setItemStateHandlerPut).Methods("PUT")
-	router.HandleFunc("/items//{namespace}/{item}/state", setItemStateHandlerPost).Methods("POST")
+	router.HandleFunc("/items/{namespace}/{item}/state", setItemStateHandlerPut).Methods("PUT")
+	router.HandleFunc("/items/{namespace}/{item}/state", setItemStateHandlerPost).Methods("POST")
 	router.HandleFunc("/items", getItemsHandler).Methods("GET")
 	router.HandleFunc("/items/{namespace}", getNamespaceHandler).Methods("GET")
 	return nil
@@ -68,12 +68,11 @@ func getNamespaceHandler(w http.ResponseWriter, r *http.Request) {
 	itemDataArray := make([]item.ItemData, len(*ns))
 	index := 0
 	ns.ForEachItem(func(name string, itm *item.Item) {
-			itemDataArray[index] = itm.Data()
-			index++
+		itemDataArray[index] = itm.Data()
+		index++
 	})
 	json.NewEncoder(w).Encode(itemDataArray)
 	logger.DebugLn("returned", itemDataArray)
-
 
 }
 
@@ -99,7 +98,7 @@ func getItemHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	ns := params["namespace"]
 	name := params["item"]
-	logger.InfoLn("received requerst for item:", ns + "/" + name)
+	logger.InfoLn("received requerst for item:", ns+"/"+name)
 	itm, err := items.GetItem(ns, name)
 	if err != nil {
 		fmt.Fprint(w, err)
@@ -115,7 +114,7 @@ func getItemPropertyHandler(w http.ResponseWriter, r *http.Request) {
 	name := params["item"]
 	itemProperty := strings.Title(params["property"])
 	logger.InfoLn("received request for", itemProperty, "of", name)
-	logger.InfoLn("received requerst for item:", ns + "/" + name)
+	logger.InfoLn("received requerst for item:", ns+"/"+name)
 	itm, err := items.GetItem(ns, name)
 	if err != nil {
 		fmt.Fprint(w, err)
