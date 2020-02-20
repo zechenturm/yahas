@@ -16,6 +16,7 @@ type Item struct {
 }
 
 type ItemData struct {
+	Namespace    string
 	Name         string            `json:"name"`
 	Label        string            `json:"label"`
 	State        string            `json:"state"`

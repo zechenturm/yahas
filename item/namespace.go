@@ -78,6 +78,7 @@ func (nm *NamespaceMap) loadNamespace(dirPath, name string, bm *bManager) error 
 	itemArray := make([]Item, len(itemDataArray))
 	namespace := make(Namespace)
 	for index, data := range itemDataArray {
+		data.Namespace = name
 		err = itemArray[index].New(data, bm)
 		if err != nil {
 			return err
