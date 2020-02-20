@@ -54,8 +54,11 @@ func (mi *mqttBinding) Init(l *logging.Logger, configFile *os.File) error {
 		return initError{"Can not open config file!"}
 	}
 	conf := config{}
-	json.NewDecoder(configFile).Decode(&conf)
-	err := clnt.Connect(&client.ConnectOptions{
+	err := json.NewDecoder(configFile).Decode(&conf)
+	if err != nil {
+		return err
+	}
+	err = clnt.Connect(&client.ConnectOptions{
 		Network:  "tcp",
 		Address:  conf.Server,
 		ClientID: []byte(conf.ClientID),
@@ -96,11 +99,14 @@ func (mi *mqttBinding) RegisterItem(name string, params map[string]string) (*cha
 		go func() {
 			for msg := range s {
 				logger.DebugLn("MQTT", name, "sending", msg)
-				clnt.Publish(&client.PublishOptions{
+				err := clnt.Publish(&client.PublishOptions{
 					QoS:       mqtt.QoS0,
 					TopicName: []byte(di.SendTopic),
 					Message:   []byte(msg),
 				})
+				if err != nil {
+					logger.ErrorLn("error publishing:", err)
+				}
 			}
 			logger.DebugLn("closing send for", name)
 		}()
