@@ -1,9 +1,10 @@
 package yahasplugin
 
 import (
+	"os"
+
 	"github.com/zechenturm/yahas/item"
 	"github.com/zechenturm/yahas/logging"
-	"os"
 
 	"github.com/gorilla/mux"
 )
@@ -12,6 +13,12 @@ type Plugin interface {
 	Init(Provider, *logging.Logger, *os.File) error
 	DeInit() error
 }
+
+type Service interface {
+	Name() string
+	ProvidedBy() string
+}
+
 type Provider interface {
 	RequestRouter() (*mux.Router, error)
 	Items() (*item.NamespaceMap, error)
