@@ -3,13 +3,16 @@ package service
 import "github.com/zechenturm/yahas/yahasplugin"
 
 type serviceManager struct {
-	service yahasplugin.Service
+	services map[string]yahasplugin.Service
 }
 
 func (sm *serviceManager) Register(name string, service yahasplugin.Service) {
-	sm.service = service
+	if sm.services == nil {
+		sm.services = make(map[string]yahasplugin.Service)
+	}
+	sm.services[name] = service
 }
 
 func (sm *serviceManager) Get(name string) yahasplugin.Service {
-	return sm.service
+	return sm.services[name]
 }

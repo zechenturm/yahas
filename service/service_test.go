@@ -5,6 +5,7 @@ import (
 )
 
 type testService struct {
+	Num int
 }
 
 func (service *testService) Name() string {
@@ -15,7 +16,7 @@ func (service *testService) ProvidedBy() string {
 }
 
 func (service *testService) Additional() int {
-	return 10
+	return service.Num
 }
 
 func TestSingleService(t *testing.T) {
@@ -34,4 +35,27 @@ func TestSingleService(t *testing.T) {
 	if serv2.(*testService).Additional() != serv.Additional() {
 		t.Fatal("Additional() returned wrong number!")
 	}
+}
+
+func TestMultiplrServices(t *testing.T) {
+	s := serviceManager{}
+
+	serv1 := &testService{Num: 10}
+	serv2 := &testService{Num: 20}
+
+	s.Register("test1", serv1)
+	s.Register("test2", serv2)
+
+	if s.Get("test1") != serv1 {
+		t.Fatal("Get() returned wrong test!")
+	}
+
+	if serv1.Additional() != s.Get("test1").(*testService).Additional() {
+		t.Fatal("Additional() returned wrong number!")
+	}
+
+	if serv2.Additional() != s.Get("test2").(*testService).Additional() {
+		t.Fatal("Additional() returned wrong number!")
+	}
+
 }
