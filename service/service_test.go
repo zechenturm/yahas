@@ -14,6 +14,10 @@ func (service *testService) ProvidedBy() string {
 	return "test"
 }
 
+func (service *testService) Additional() int {
+	return 10
+}
+
 func TestSingleService(t *testing.T) {
 	s := serviceManager{}
 
@@ -25,5 +29,9 @@ func TestSingleService(t *testing.T) {
 
 	if serv2 != serv {
 		t.Fatal("service manager returned wrong service!")
+	}
+
+	if serv2.(*testService).Additional() != serv.Additional() {
+		t.Fatal("Additional() returned wrong number!")
 	}
 }
