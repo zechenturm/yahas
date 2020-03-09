@@ -7,7 +7,7 @@
 			<div style="display: inline;">
                 {{ .Label }}
 			</div>
-			<input type="time" value="{{ index $parts 0 }}" style="font-size: 1.2em;" id="item-{{.Name}}-time" onchange="setItemState('{{.Namespace}}, {{.Name}}', getTimeState{{.Name}}())">
+			<input type="time" value="{{ index $parts 0 }}" style="font-size: 1.2em;" id="item-{{.Name}}-time" onchange="setItemState('{{.Namespace}}', '{{.Name}}', getTimeState{{.Name}}())">
 		</label>
 		<div style="display: inline;">
 			<input type="text" value="{{ index $parts 1 }}" id="item-{{.Name}}-state" style="font-size: 1.2em;">
