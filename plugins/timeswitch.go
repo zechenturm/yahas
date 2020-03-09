@@ -2,22 +2,24 @@ package main
 
 import (
 	"encoding/json"
+	"os"
+	"time"
+
 	"github.com/zechenturm/yahas/item"
 	"github.com/zechenturm/yahas/logging"
 	"github.com/zechenturm/yahas/yahasplugin"
-	"os"
-	"strings"
-	"time"
 )
 
 type timeItem struct {
 	TimeItem        itemData   `json:"time-item"`
+	StateItem       itemData   `json:"state-item"`
+	State           string     `json:"state"`
 	ControlledItems []itemData `json:"controlled-item"`
 }
 
 type itemData struct {
 	Namespace string `json:"namespace"`
-	Name string `json:"name"`
+	Name      string `json:"name"`
 }
 
 type TimeSwitch struct {
@@ -54,21 +56,28 @@ func (tm *TimeSwitch) Init(provider yahasplugin.Provider, l *logging.Logger, con
 						l.ErrorLn(err)
 						return
 					}
-					timeItem := ptr.Data()
-					strs := strings.Split(timeItem.State, ";")
-					if len(strs) != 2 {
-						l.ErrorLn("Failed to parse time item:", timeItem.Name, ":", timeItem.State)
-						continue
+
+					state := itm.State
+					if state == "" {
+						statePtr, err := tm.itemMap.GetItem(itm.StateItem.Namespace, itm.StateItem.Name)
+						if err != nil {
+							l.ErrorLn(err)
+							return
+						}
+						state = statePtr.Data().State
 					}
-					if timeString == strs[0] {
-						l.DebugLn(timeItem.Name, "set to ", strs[1])
+
+					timeItem := ptr.Data()
+
+					if timeString == timeItem.State {
+						l.DebugLn(timeItem.Name, "set to ", state)
 						for _, it := range itm.ControlledItems {
 							i, err := tm.itemMap.GetItem(it.Namespace, it.Name)
 							if err != nil {
 								l.ErrorLn(it.Namespace, it.Name, err)
 								continue
 							}
-							i.Send(strs[1])
+							i.Send(state)
 						}
 					}
 				}

@@ -1,17 +1,25 @@
 [
   {
-    "time-item": "<item1 to set time and state>",
+    "time-item":
+    {
+      "namespace": "namecpace of the item",
+      "name": "name of item to control the time"
+    },
+    "state-item": {
+      "namespace": "namecpace of the item",
+      "name": "name of item to specify state to send to controlled item"
+    },
+    "state": "optional state: this will override the state item",
     "controlled-item":
     [
-      "<item1 to be set>"
-    ]
-  },
-  {
-    "time-item": "<item2 to set time and state>",
-    "controlled-item":
-    [
-      "<item1 to be set>",
-      "<item2 to be set>"
+      {
+        "namespace": "namecpace of the item",
+        "name": "item to be set"
+      },
+      {
+        "namespace": "namecpace of the item",
+        "name": "optional: 2nd item to be set"
+        }
     ]
   }
 ]

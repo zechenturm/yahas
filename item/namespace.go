@@ -2,10 +2,11 @@ package item
 
 import (
 	"encoding/json"
-	"github.com/zechenturm/yahas/logging"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/zechenturm/yahas/logging"
 )
 
 type Namespace map[string]*Item
@@ -21,7 +22,7 @@ type AlreadyLoadedError struct {
 }
 
 func (nfe NotFoundError) Error() string {
-	return "item " + nfe.itemName + "not found"
+	return "item " + nfe.itemName + " not found"
 }
 
 func (ale AlreadyLoadedError) Error() string {
