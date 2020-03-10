@@ -20,7 +20,7 @@ func (service *testService) Additional() int {
 }
 
 func TestSingleService(t *testing.T) {
-	s := serviceManager{}
+	s := ServiceManager{}
 
 	serv := &testService{}
 
@@ -38,7 +38,7 @@ func TestSingleService(t *testing.T) {
 }
 
 func TestMultipleServices(t *testing.T) {
-	s := serviceManager{}
+	s := ServiceManager{}
 
 	serv1 := &testService{Num: 10}
 	serv2 := &testService{Num: 20}
@@ -61,7 +61,7 @@ func TestMultipleServices(t *testing.T) {
 }
 
 func TestUnregister(t *testing.T) {
-	s := serviceManager{}
+	s := ServiceManager{}
 
 	serv := &testService{}
 
