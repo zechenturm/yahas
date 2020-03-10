@@ -37,7 +37,7 @@ func TestSingleService(t *testing.T) {
 	}
 }
 
-func TestMultiplrServices(t *testing.T) {
+func TestMultipleServices(t *testing.T) {
 	s := serviceManager{}
 
 	serv1 := &testService{Num: 10}
