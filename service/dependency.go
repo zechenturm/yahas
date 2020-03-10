@@ -1,12 +1,13 @@
 package service
 
 type DependencyManager struct {
+	deps []string
 }
 
-func (*DependencyManager) Add(name string) {
-
+func (dm *DependencyManager) Add(name string) {
+	dm.deps = append(dm.deps, name)
 }
 
-func (*DependencyManager) Order() []string {
-	return []string{"test"}
+func (dm *DependencyManager) Order() []string {
+	return dm.deps
 }
