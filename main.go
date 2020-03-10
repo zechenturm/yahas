@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"time"
+
 	"github.com/zechenturm/yahas/item"
 	"github.com/zechenturm/yahas/logging"
-	"io/ioutil"
-	"net/http"
 
 	"github.com/gorilla/mux"
 )
@@ -61,17 +62,21 @@ func main() {
 		coreLogger.ErrorLn("Error loading items:", err)
 		return
 	}
-	mainRouter = mux.NewRouter()
-	mainRouter.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./web/"))))
+	//mainRouter = mux.NewRouter()
+	//mainRouter.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./web/"))))
 
 	err = loadPlugins(coreconf.IgnorePlugins)
 	if err != nil {
 		coreLogger.ErrorLn("Error loading plugins:", err)
 	}
 
-	err = http.ListenAndServe(":8000", mainRouter)
-	if err != nil {
-		coreLogger.ErrorLn("HTTP server error:", err)
+	//err = http.ListenAndServe(":8000", mainRouter)
+	//if err != nil {
+	//	coreLogger.ErrorLn("HTTP server error:", err)
+	//}
+
+	for {
+		time.Sleep(time.Second)
 	}
 }
 

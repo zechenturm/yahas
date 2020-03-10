@@ -5,8 +5,6 @@ import (
 
 	"github.com/zechenturm/yahas/item"
 	"github.com/zechenturm/yahas/logging"
-
-	"github.com/gorilla/mux"
 )
 
 type Plugin interface {
@@ -20,7 +18,7 @@ type Service interface {
 }
 
 type Provider interface {
-	RequestRouter() (*mux.Router, error)
+	//RequestRouter() (*mux.Router, error)
 	Items() (*item.NamespaceMap, error)
 	RequestPlugins() (Manager, error)
 	BindingManager() (item.BindingManager, error)
