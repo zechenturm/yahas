@@ -59,3 +59,17 @@ func TestMultipleServices(t *testing.T) {
 	}
 
 }
+
+func TestUnregister(t *testing.T) {
+	s := serviceManager{}
+
+	serv := &testService{}
+
+	s.Register("test", serv)
+	s.Unregister("test")
+
+	if s.Get("test") != nil {
+		t.Fatal("service did not unregister properly")
+	}
+
+}

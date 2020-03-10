@@ -16,3 +16,7 @@ func (sm *serviceManager) Register(name string, service yahasplugin.Service) {
 func (sm *serviceManager) Get(name string) yahasplugin.Service {
 	return sm.services[name]
 }
+
+func (sm *serviceManager) Unregister(name string) {
+	delete(sm.services, name)
+}
