@@ -18,17 +18,12 @@ type Service interface {
 }
 
 type Provider interface {
-	//RequestRouter() (*mux.Router, error)
 	Items() (*item.NamespaceMap, error)
 	RequestPlugins() (Manager, error)
 	BindingManager() (item.BindingManager, error)
-	Register(string, Service) error
-	Unregister(string) error
-	Get(string) (Service, error)
 }
 
 type Manager interface {
 	Load(name string) error
 	Unload(name string) error
-	Map() *map[string]*Plugin
 }
