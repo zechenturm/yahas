@@ -1,0 +1,6 @@
+{
+  "api_token": "myApiKey",
+  "valid_users": [
+    "myUserName"
+  ]
+}
