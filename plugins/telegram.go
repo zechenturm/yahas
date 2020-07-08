@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"os"
+	"strconv"
 
 	"github.com/zechenturm/yahas/item"
 
@@ -20,10 +21,12 @@ type Telegram struct {
 	stop          chan struct{}
 	bot           *tgbotapi.BotAPI
 	updates       tgbotapi.UpdatesChannel
+	validUsers    []string
 }
 
 type config struct {
-	APIToken string `json:"api-token"`
+	APIToken   string   `json:"api_token"`
+	ValidUsers []string `json:"valid_users"`
 }
 
 func (tg *Telegram) Init(args yahasplugin.Provider, l *logging.Logger, configFile *os.File) error {
@@ -46,6 +49,8 @@ func (tg *Telegram) Init(args yahasplugin.Provider, l *logging.Logger, configFil
 	if err != nil {
 		return err
 	}
+
+	tg.validUsers = conf.ValidUsers
 
 	tg.bot, err = tgbotapi.NewBotAPI(conf.APIToken)
 	if err != nil {
@@ -81,7 +86,17 @@ func (tg *Telegram) updateLoop() {
 			continue
 		}
 
-		logger.DebugLn("[", update.Message.Chat.ID, ",", update.Message.From.ID, "]", update.Message.Text)
+		username := update.Message.From.UserName
+		displayName := username
+		if displayName == "" {
+			displayName = strconv.Itoa(update.Message.From.ID)
+		}
+		logger.DebugLn("[", update.Message.Chat.ID, ",", displayName, "]", update.Message.Text)
+
+		if !tg.validUser(username) {
+			logger.DebugLn(username, "is not a valid user")
+			continue
+		}
 
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
 		msg.ReplyToMessageID = update.Message.MessageID
@@ -165,6 +180,15 @@ func (tg *Telegram) itemFromArgs(message *tgbotapi.Message) (*item.Item, error) 
 func (tg *Telegram) sendString(id int64, text string) {
 	msg := tgbotapi.NewMessage(id, text)
 	tg.bot.Send(msg)
+}
+
+func (tg *Telegram) validUser(name string) bool {
+	for _, validUser := range tg.validUsers {
+		if name == validUser {
+			return true
+		}
+	}
+	return false
 }
 
 var Plugin Telegram
