@@ -66,15 +66,15 @@ type yPlugin struct {
 	router *mux.Router
 }
 
-//func (yp *yPlugin) RequestRouter() (*mux.Router, error) {
-//	if !checkPermission(yp.Name, "router", true) {
-//		return nil, errors.New("Permission denied")
-//	}
-//	if yp.router == nil {
-//		yp.router = mainRouter.PathPrefix("/" + yp.Name).Subrouter()
-//	}
-//	return yp.router, nil
-//}
+func (yp *yPlugin) RequestRouter() (*mux.Router, error) {
+	if !checkPermission(yp.Name, "router", true) {
+		return nil, errors.New("Permission denied")
+	}
+	if yp.router == nil {
+		yp.router = mainRouter.PathPrefix("/" + yp.Name).Subrouter()
+	}
+	return yp.router, nil
+}
 
 func (yp *yPlugin) Items() (*item.NamespaceMap, error) {
 	if !checkPermission(yp.Name, "items", true) {

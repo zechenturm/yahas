@@ -3,6 +3,8 @@ package yahasplugin
 import (
 	"os"
 
+	"github.com/gorilla/mux"
+
 	"github.com/zechenturm/yahas/item"
 	"github.com/zechenturm/yahas/logging"
 )
@@ -18,7 +20,7 @@ type Service interface {
 }
 
 type Provider interface {
-	//RequestRouter() (*mux.Router, error)
+	RequestRouter() (*mux.Router, error)
 	Items() (*item.NamespaceMap, error)
 	RequestPlugins() (Manager, error)
 	BindingManager() (item.BindingManager, error)
