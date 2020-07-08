@@ -1,10 +1,11 @@
 package item
 
 import (
-	"github.com/zechenturm/yahas/logging"
 	"math/rand"
 	"sync"
 	"time"
+
+	"github.com/zechenturm/yahas/logging"
 )
 
 type Item struct {
