@@ -24,9 +24,6 @@ type Provider interface {
 	Items() (*item.NamespaceMap, error)
 	RequestPlugins() (Manager, error)
 	BindingManager() (item.BindingManager, error)
-	Register(string, Service) error
-	Unregister(string) error
-	Get(string) (Service, error)
 }
 
 type Manager interface {

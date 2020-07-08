@@ -7,8 +7,6 @@ import (
 	"path"
 	"plugin"
 
-	"github.com/zechenturm/yahas/service"
-
 	"github.com/zechenturm/yahas/item"
 	"github.com/zechenturm/yahas/logging"
 	"github.com/zechenturm/yahas/yahasplugin"
@@ -19,7 +17,6 @@ import (
 var plugins map[string]*yahasplugin.Plugin
 var yPlugins map[string]*yPlugin
 var pManager pluginManager
-var serviceManager service.ServiceManager
 
 type pluginManager struct {
 }
@@ -95,20 +92,6 @@ func (yp *yPlugin) BindingManager() (item.BindingManager, error) {
 		return nil, errors.New("Permission denied")
 	}
 	return loader.BindingManager, nil
-}
-
-func (yp *yPlugin) Register(name string, service yahasplugin.Service) error {
-	serviceManager.Register(name, service)
-	return nil
-}
-
-func (yp *yPlugin) Unregister(name string) error {
-	serviceManager.Unregister(name)
-	return nil
-}
-
-func (yp *yPlugin) Get(name string) (yahasplugin.Service, error) {
-	return serviceManager.Get(name), nil
 }
 
 func loadPlugins(ignore []string) error {
