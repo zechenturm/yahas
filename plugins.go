@@ -35,7 +35,7 @@ func (pm *pluginManager) Unload(name string) error {
 	}
 	coreLogger.DebugLn("unlading " + name)
 	*(plug.router) = mux.Router{}
-	mainRouter.PathPrefix("/" + name).Subrouter()
+	router.PathPrefix("/" + name).Subrouter()
 	pl := plugins[name]
 	delete(yPlugins, name)
 	delete(plugins, name)
@@ -68,7 +68,7 @@ func (yp *yPlugin) RequestRouter() (*mux.Router, error) {
 		return nil, errors.New("Permission denied")
 	}
 	if yp.router == nil {
-		yp.router = mainRouter.PathPrefix("/" + yp.Name).Subrouter()
+		yp.router = router.PathPrefix("/" + yp.Name).Subrouter()
 	}
 	return yp.router, nil
 }
